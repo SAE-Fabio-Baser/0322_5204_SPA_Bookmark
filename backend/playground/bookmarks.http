@@ -1,0 +1,22 @@
+### Get all Bookmarks
+GET {{host}}/api/bookmarks
+Authorization: Bearer {{token}}
+
+### Create new Bookmark
+POST {{host}}/api/bookmarks/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "neuesBookmark",
+  "externalUrl": "http://wofjwefi",
+  "creator": "Fabio"
+}
+
+### Login User
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "idToken": "{{token}}"
+}

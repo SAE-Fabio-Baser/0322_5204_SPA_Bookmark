@@ -1,1 +1,7 @@
+.idea/
+
 backend/node_modules
+
+client/dist
+client/node_modules
+client/.parcel-cache

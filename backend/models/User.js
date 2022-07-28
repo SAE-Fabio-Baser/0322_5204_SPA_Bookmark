@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
   displayName: {
@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   providers: {
-    type: Array,
+    type: Object,
     required: true,
   },
   tags: {
@@ -21,8 +21,8 @@ const userSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
-});
+})
 
-const User = mongoose.model("Bookmark", userSchema);
+const User = mongoose.model('User', userSchema)
 
-export default User;
+export default User

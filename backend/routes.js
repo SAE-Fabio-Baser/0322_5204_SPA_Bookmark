@@ -1,62 +1,79 @@
-import { OAuth2Client } from "google-auth-library";
-import { Bookmark } from "./models/index.js";
-
-function loggedIn(req, res, next) {
-  const { authorization } = req.headers;
-
-  if (!authorization) {
-    res.json({ code: "noAuthHeader" });
-    return;
-  }
-
-  const [bearerType, token] = authorization.split(" ");
-
-  if (bearerType !== "Bearer") {
-    res.json({ code: "authHeaderMustBeBearer" });
-    return;
-  }
-
-  const auth = new OAuth2Client();
-
-  auth
-    .verifyIdToken({
-      idToken: token,
-    })
-    .then((loginTicket) => {
-      console.log(loginTicket);
-      req.body.user = loginTicket.payload;
-      next();
-    })
-    .catch((error) => {
-      res.send({ code: "invalidToken" });
-    });
-}
+import { Bookmark, User } from './models/index.js'
+import loggedIn, { getGoogleInfo } from './lib/loggedIn.js'
 
 function routes(app) {
-  app.get("/api/bookmarks", loggedIn, async (req, res) => {
-    const bookmarks = await Bookmark.find();
-    res.json({ code: "success", data: bookmarks });
-  });
+  app.post('/auth/login', (req, res) => {
+    const { idToken } = req.body
 
-  app.post("/api/bookmarks/create", loggedIn, async (req, res) => {
-    const { name, externalUrl, creator } = req.body;
+    getGoogleInfo(idToken)
+      .then(async loginTicket => {
+        const { sub, iss, name } = loginTicket.payload
+
+        const providerNames = {
+          'https://accounts.google.com': 'google',
+        }
+
+        const currentProviderName = providerNames[iss]
+
+        const existingUser = await User.where(
+          'providers.' + currentProviderName,
+          sub
+        )
+
+        console.log(existingUser)
+
+        if (existingUser.length === 0) {
+          const newUser = new User({
+            displayName: name,
+            createdAt: Date.now(),
+            providers: {
+              [currentProviderName]: sub,
+            },
+            collections: [],
+            tags: [],
+          })
+
+          newUser
+            .save()
+            .then(r => res.json(r))
+            .catch(err => {
+              res.sendStatus(500)
+              console.error(err)
+            })
+        } else {
+          res.json(existingUser[0])
+        }
+      })
+      .catch(console.error)
+  })
+
+  app.post('/auth/link')
+
+  app.get('/api/bookmarks', loggedIn, async (req, res) => {
+    const bookmarks = await Bookmark.find()
+    res.json({ code: 'success', data: bookmarks })
+  })
+
+  app.post('/api/bookmarks/create', loggedIn, async (req, res) => {
+    const { name, externalUrl } = req.body
+    const { sub } = req.body.user
 
     const bookmark = new Bookmark({
-      creator,
+      creator: sub,
       name,
       favorite: false,
       externalUrl,
       createdAt: Date.now(),
-    });
+    })
 
     bookmark
       .save()
-      .then((r) => res.json(r))
-      .catch((err) => {
-        res.sendStatus(500);
-        console.error(err);
-      });
-  });
+      .then(r => res.json(r))
+      .catch(err => {
+        res.sendStatus(500)
+        console.error(err)
+      })
+  })
 }
 
-export default routes;
+export default routes
