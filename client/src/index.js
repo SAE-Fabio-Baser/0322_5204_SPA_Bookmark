@@ -16,6 +16,7 @@ const App = () => {
         '994628434629-8qgih8kafitts6bkqqntorv5t09n2o4b.apps.googleusercontent.com',
       callback: handleCredentialResponse,
     })
+
     window.google.accounts.id.renderButton(
       loginButtonRef.current,
       { theme: 'outline', size: 'large' } // customization attributes
@@ -26,7 +27,7 @@ const App = () => {
   return (
     <div>
       <div id='buttonDiv' ref={loginButtonRef}></div>
-      <h1>Moin</h1>
+      <h1>Moin2</h1>
     </div>
   )
 }

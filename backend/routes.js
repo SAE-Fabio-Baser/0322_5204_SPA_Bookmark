@@ -2,6 +2,30 @@ import { Bookmark, User } from './models/index.js'
 import loggedIn, { getGoogleInfo } from './lib/loggedIn.js'
 
 function routes(app) {
+
+  /**
+   * @swagger
+   * /auth/login:
+   *  post:
+   *    tags: [Auth]
+   *    summary: Logs a user in
+   *    requestBody:
+   *      content:
+   *        application/json:
+   *          schema:
+   *            type: object
+   *            required:
+   *              - idToken
+   *            properties:
+   *              idToken:
+   *                type: string
+   *                default: eyH0pkwfeoijef...
+   *
+   *    responses:
+   *      "200":
+   *        description: A user was logged in
+   *
+   */
   app.post('/auth/login', (req, res) => {
     const { idToken } = req.body
 
