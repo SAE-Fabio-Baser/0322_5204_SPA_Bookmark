@@ -10,6 +10,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="0322_VCE_SPA_oAuth" />
   </component>
 </module>

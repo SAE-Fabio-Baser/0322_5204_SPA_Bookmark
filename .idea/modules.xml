@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/0322_5204_SPA_Bookmark.iml" filepath="$PROJECT_DIR$/.idea/0322_5204_SPA_Bookmark.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../0322_VCE_SPA_oAuth/.idea/0322_VCE_SPA_oAuth.iml" filepath="$PROJECT_DIR$/../0322_VCE_SPA_oAuth/.idea/0322_VCE_SPA_oAuth.iml" />
     </modules>
   </component>
 </project>
