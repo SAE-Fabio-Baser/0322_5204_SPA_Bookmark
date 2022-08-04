@@ -1,36 +1,22 @@
 import React, { useRef, useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
+import Navbar from './Components/Navbar'
+import routes from './lib/routes'
+
 const App = () => {
   let handleCredentialResponse = console.log
 
   const loginButtonRef = useRef()
 
-  useEffect(() => {
-    if (!loginButtonRef) return
-
-    // @ts-ignore
-    window.google.accounts.id.initialize({
-      client_id:
-        '994628434629-8qgih8kafitts6bkqqntorv5t09n2o4b.apps.googleusercontent.com',
-      callback: handleCredentialResponse,
-    })
-
-    // @ts-ignore
-    window.google.accounts.id.renderButton(
-      loginButtonRef.current,
-      { theme: 'outline', size: 'large' } // customization attributes
-    )
-    // @ts-ignore
-    window.google.accounts.id.prompt() // also display the One Tap dialog
-  }, [loginButtonRef])
-
   return (
     <>
-      <Navbar />
       <BrowserRouter>
+        <Navbar />
         <Routes>
-          <Route path='/' element={<h1>Moin</h1>}></Route>
+          {routes.map(({ element, path }) => (
+            <Route key={path} path={path} element={element}></Route>
+          ))}
         </Routes>
       </BrowserRouter>
     </>

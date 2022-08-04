@@ -11,12 +11,14 @@
         "allowJs": true,
         "jsx": "react",
         "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
         "lib": [
             "dom",
-            "es2017",
+            "es2017"
         ]
     },
     "include": [
-        "./src/**/*"
+        "./src/**/*",
+        "types.d.ts"
     ]
 }

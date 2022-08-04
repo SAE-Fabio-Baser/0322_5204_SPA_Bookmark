@@ -1,27 +1,33 @@
-import express from "express";
-import mongoose from "mongoose";
+import express from 'express'
+import mongoose from 'mongoose'
+import fs from 'fs'
+import config from './config.js'
+const { routesDirectory } = config
+import setupSwagger from './setupSwagger.js'
 
-import config from "./config.js";
-import routes from "./routes.js";
-import setupSwagger from "./setupSwagger.js";
+const app = express()
 
-const app = express();
+app.use(express.json())
 
-app.use(express.json());
+const routesFileNames = fs.readdirSync(routesDirectory)
+routesFileNames.forEach(routeName => {
+  import(routesDirectory + routeName).then(module => {
+    module.default(app)
+  })
+})
 
-routes(app);
-setupSwagger(app);
+setupSwagger(app)
 
 function startExpress() {
   app.listen(config.port, () => {
-    console.log("Server started on Port: " + config.port);
-  });
+    console.log('Server started on Port: ' + config.port)
+  })
 }
 
 mongoose
   .connect(config.mongoConnUri)
   .then(startExpress)
-  .catch((e) => {
-    console.error("Couldn't connect to MongoDB", e);
-    process.exit(1);
-  });
+  .catch(e => {
+    console.error("Couldn't connect to MongoDB", e)
+    process.exit(1)
+  })

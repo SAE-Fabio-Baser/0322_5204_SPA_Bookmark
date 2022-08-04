@@ -1,7 +1,8 @@
-import { Bookmark, User } from './models/index.js'
-import loggedIn, { getGoogleInfo } from './lib/loggedIn.js'
+import { getGoogleInfo } from '../lib/loggedIn.js'
+import { User } from '../models/index.js'
 
-function routes(app) {
+export default function (app) {
+  console.log('Hallo aus der Route')
 
   /**
    * @swagger
@@ -70,34 +71,4 @@ function routes(app) {
       })
       .catch(console.error)
   })
-
-  app.post('/auth/link')
-
-  app.get('/api/bookmarks', loggedIn, async (req, res) => {
-    const bookmarks = await Bookmark.find()
-    res.json({ code: 'success', data: bookmarks })
-  })
-
-  app.post('/api/bookmarks/create', loggedIn, async (req, res) => {
-    const { name, externalUrl } = req.body
-    const { sub } = req.body.user
-
-    const bookmark = new Bookmark({
-      creator: sub,
-      name,
-      favorite: false,
-      externalUrl,
-      createdAt: Date.now(),
-    })
-
-    bookmark
-      .save()
-      .then(r => res.json(r))
-      .catch(err => {
-        res.sendStatus(500)
-        console.error(err)
-      })
-  })
 }
-
-export default routes
