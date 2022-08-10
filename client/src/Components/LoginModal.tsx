@@ -11,8 +11,6 @@ function LoginModal(props: Props): JSX.Element {
   const loginButtonRef = useRef<null | HTMLDivElement>(null)
 
   function handleOnOpen() {
-    console.log(loginButtonRef.current?.childNodes.length)
-
     // @ts-ignore
     window.google.accounts.id.initialize({
       client_id:
